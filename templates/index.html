@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Secure Gateaway ACL Configutaion</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/stylesheets/style.css">
+  </head>
+
+  <body>
+    <h1>Secure Gateaway ACL Configutaion</h1>
+    <h2>Step1. Configuration</h2>
+    <table>
+      <tr>
+        <td style= "width:30%;" rowspan="2">
+          <img class="newappIcon" src="static/images/networksecurity.png">
+          「IP テーブル・ルールを使用して、この宛先へのクラウド・アクセスを制限します」に
+          <span class = "blue">チェック</span>を入れてください。
+        <td>
+          <p>このインスタンスのIPアドレスは、
+            <span class = "blue">{{ address }}</span> です.
+            このアプリケーションは、セキュアゲートウェイのネットワークセキュリティを構成します。
+            構成を行うための情報を入力し <span class = "blue">go </span>ボタンを押してください。
+      <tr>
+        <td>
+          <form method="POST" action="/result">
+            <div>
+                <label for="gatewayid">Gateway Id:</label>
+                <input type="text" name="gatewayid" />
+            </div>
+            <div>
+                <label for="securitytoken">Security Token:</label>
+                <input type="text" name="securitytoken" />
+            </div>
+            <div>
+                <label for="distinationId">Distination Id:</label>
+                <input type="text" name="distinationId" />
+            </div>
+            <input class="submit" type="submit" value="Go">
+          </form>
+      </table>
+
+    {% if type == "config" %}
+    <div id="result">
+      {% if status_code == 404 %}
+        <p> status_code: <span class = "blue">{{ status_code }} </span> </p>
+        <pre>
+          result: {{ result }}
+        </pre>
+      {% elif status_code == 200 %}
+        <p> status_code: <span class = "blue">{{ status_code }} </span> </p>
+        <p> Secure Gateway に対して設定を行い、以下の結果になっています </p>
+
+        <table>
+          <tr>
+            <th> src </th>
+            <th> port </th>
+            <th> protocol </th>
+            <th> target </th>
+          </tr>
+        {% for key in result %}
+          <tr>
+            <td> {{ key.src }} </td>
+            <td> {{ key.spt }} </td>
+            <td> {{ key.protocol }} </td>
+            <td> {{ key.target }} </td>
+          </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <h2>Step2. Connection Test</h2>
+    <div id="result">
+      接続テストを行う事ができます。下記の Traget Url に対して、CFアプリケーションから
+      HTTPリクエスト(GET)を実施します。Secure Gateway の Destination(宛先) で
+      提供される「クラウド・ホスト・ポート」を指定してください。
+      Secure Gateway の設定が行われていない場合は通信が出来ない状態になっています。
+      <table>
+      <tr>
+        <td>
+          <form method="POST" action="/test">
+            <div>
+                <label for="gatewayid">Target URL:</label>
+                <input type="text" name="target" />
+            </div>
+            <input class="submit" type="submit" value="CHECK">
+          </form>
+      </table>
+    </div>
+
+    {% if type == "check" %}
+    <pre>
+        {{ result_check }}
+    </pre>
+    {% endif %}
+
+  </body>
+
+
+</html>
