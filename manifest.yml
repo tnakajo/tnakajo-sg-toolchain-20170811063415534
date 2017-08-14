@@ -3,7 +3,7 @@ applications:
   memory: 128M
   instances: 1
   domain: mybluemix.net
-  name: securegateay-client-sample
-  host: securegateay-client-samople
+  name: securegateay-client-sample-tn
+  host: securegateay-client-sample-tn
   disk_quota: 1024M
   buildpack: python_buildpack
